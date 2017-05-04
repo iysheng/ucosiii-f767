@@ -50,7 +50,8 @@
 *********************************************************************************************************
 */
 
-#define  BSP_LED1_GPIOF_PIN                       DEF_BIT_10
+#define  BSP_LED0_GPIOF_PIN                       DEF_BIT_00
+#define  BSP_LED1_GPIOF_PIN                       DEF_BIT_01
 
 
 /*
@@ -110,14 +111,14 @@ void  BSP_LED_Init (void)
     GPIO_InitTypeDef  gpio_init;
 
 
-    __HAL_RCC_GPIOF_CLK_ENABLE();                               /* Enable GPIO clock for LED1(PF10)                     */
+    __HAL_RCC_GPIOB_CLK_ENABLE();                               /* Enable GPIO clock for LED1(PF10)                     */
 
                                                                 /* Configure the GPIOF for LED1(PF10)                   */
-    gpio_init.Pin   = BSP_LED1_GPIOF_PIN;
+    gpio_init.Pin   = BSP_LED0_GPIOF_PIN|BSP_LED1_GPIOF_PIN;
     gpio_init.Mode  = GPIO_MODE_OUTPUT_PP;
     gpio_init.Pull  = GPIO_PULLUP;
     gpio_init.Speed = GPIO_SPEED_HIGH;
-    HAL_GPIO_Init(GPIOF, &gpio_init);
+    HAL_GPIO_Init(GPIOB, &gpio_init);
 
     BSP_LED_Off(0u);
 }
@@ -145,8 +146,8 @@ void  BSP_LED_Init (void)
 void  BSP_LED_Off (CPU_INT08U  led)
 {
     switch (led) {
-        case 0u:
-        case 1u:
+        case 0u:HAL_GPIO_WritePin(GPIOB, BSP_LED0_GPIOF_PIN, GPIO_PIN_SET);break;
+        case 1u:HAL_GPIO_WritePin(GPIOB, BSP_LED1_GPIOF_PIN, GPIO_PIN_SET);break;
         default:
              HAL_GPIO_WritePin(GPIOF, BSP_LED1_GPIOF_PIN, GPIO_PIN_SET);
              break;
@@ -175,8 +176,8 @@ void  BSP_LED_Off (CPU_INT08U  led)
 void  BSP_LED_On (CPU_INT08U  led)
 {
     switch (led) {
-        case 0u:
-        case 1u:
+        case 0u:HAL_GPIO_WritePin(GPIOB, BSP_LED0_GPIOF_PIN, GPIO_PIN_RESET);break;
+        case 1u:HAL_GPIO_WritePin(GPIOB, BSP_LED1_GPIOF_PIN, GPIO_PIN_RESET);break;
         default:
              HAL_GPIO_WritePin(GPIOF, BSP_LED1_GPIOF_PIN, GPIO_PIN_RESET);
              break;
@@ -206,10 +207,8 @@ void  BSP_LED_On (CPU_INT08U  led)
 void  BSP_LED_Toggle (CPU_INT08U  led)
 {
     switch (led) {
-        case 0u:
-        case 1u:
-        default:
-             HAL_GPIO_TogglePin(GPIOF, BSP_LED1_GPIOF_PIN);
-             break;
+        case 0u:HAL_GPIO_TogglePin(GPIOB, BSP_LED0_GPIOF_PIN);break;
+        case 1u:HAL_GPIO_TogglePin(GPIOB, BSP_LED1_GPIOF_PIN);break;
+        default:HAL_GPIO_TogglePin(GPIOF, BSP_LED1_GPIOF_PIN);break;
     }
 }

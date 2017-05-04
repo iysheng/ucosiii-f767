@@ -103,7 +103,7 @@ void  BSP_OSTickInit (void)
     CPU_INT32U  cpu_clk_freq;
 
 
-    cpu_clk_freq = BSP_ClkFreqGet(BSP_CLK_ID_HCLK);             /* Determine SysTick reference freq.                    */
+    cpu_clk_freq = BSP_ClkFreqGet(BSP_CLK_ID_HCLK); //HCLKŒ™systick ±÷”‘¥       /* Determine SysTick reference freq.                    */
 
     OS_CPU_SysTickInitFreq(cpu_clk_freq);                       /* Init uC/OS periodic time src (SysTick).              */
 }

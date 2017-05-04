@@ -217,8 +217,8 @@ static  void  AppTaskStart (void *p_arg)
     APP_TRACE_DBG(("Creating Application kernel objects\n\r"));
     AppObjCreate();                                             /* Create Applicaiton kernel objects                    */
 
-    APP_TRACE_DBG(("Creating Application Tasks\n\r"));
-    AppTaskCreate();                                            /* Create Application tasks                             */
+    //APP_TRACE_DBG(("Creating Application Tasks\n\r"));
+    //AppTaskCreate();                                            /* Create Application tasks                             */
 
     while (DEF_TRUE) {                                          /* Task body, always written as an infinite loop.       */
         BSP_LED_Toggle(0u);
