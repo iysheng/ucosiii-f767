@@ -222,7 +222,11 @@ static  void  AppTaskStart (void *p_arg)
 
     while (DEF_TRUE) {                                          /* Task body, always written as an infinite loop.       */
         BSP_LED_Toggle(0u);
-        OSTimeDlyHMSM(0u, 0u, 0u, 100u,
+        OSTimeDlyHMSM(0u, 0u, 0u, 500u,
+                      OS_OPT_TIME_HMSM_STRICT,
+                      &err);
+        BSP_LED_Toggle(1u);
+        OSTimeDlyHMSM(0u, 0u, 0u, 500u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &err);
     }
