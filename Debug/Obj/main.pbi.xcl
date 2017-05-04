@@ -10,6 +10,16 @@ D:\Apollo\ucosiii\CMSIS_core
 -I
 D:\Apollo\ucosiii\HAL_Driver\Inc
 -I
+D:\Apollo\ucosiii\uC-CPU
+-I
+D:\Apollo\ucosiii\uC-LIB
+-I
+D:\Apollo\ucosiii\uCOS-III\Source
+-I
+D:\Apollo\ucosiii\UCOS-BSP
+-I
+D:\Apollo\ucosiii\UCOS-CONFIG
+-I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
@@ -21,6 +31,16 @@ D:\Apollo\ucosiii\CMSIS_header
 D:\Apollo\ucosiii\CMSIS_core
 -I
 D:\Apollo\ucosiii\HAL_Driver\Inc
+-I
+D:\Apollo\ucosiii\uC-CPU
+-I
+D:\Apollo\ucosiii\uC-LIB
+-I
+D:\Apollo\ucosiii\uCOS-III\Source
+-I
+D:\Apollo\ucosiii\UCOS-BSP
+-I
+D:\Apollo\ucosiii\UCOS-CONFIG
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0
