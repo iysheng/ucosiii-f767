@@ -343,6 +343,7 @@
                     <state>D:\Apollo\ucosiii\UCOS-CONFIG</state>
                     <state>D:\Apollo\ucosiii\uC-CPU\ARM-Cortex-M4\IAR</state>
                     <state>D:\Apollo\ucosiii\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR</state>
+                    <state>D:\Apollo\ucosiii\USR</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2046,10 +2047,19 @@
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_adc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_cortex.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_dma.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_gpio.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_ltdc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_pwr_ex.c</name>
@@ -2058,7 +2068,25 @@
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_rcc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_rcc_ex.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_sdram.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_tim.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_tim_ex.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_hal_uart.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_it.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\HAL_Driver\Src\stm32f7xx_ll_fmc.c</name>
         </file>
     </group>
     <group>
@@ -2264,5 +2292,17 @@
                 <name>$PROJ_DIR$\uCOS-III\Source\os_var.c</name>
             </file>
         </group>
+    </group>
+    <group>
+        <name>USR</name>
+        <file>
+            <name>$PROJ_DIR$\USR\apollo.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\USR\rgb.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\USR\touch.c</name>
+        </file>
     </group>
 </project>

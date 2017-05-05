@@ -51,8 +51,8 @@
 
 #define  APP_CFG_TASK_START_PRIO                2u
 #define  APP_CFG_TASK_OBJ_PRIO                  3u
-#define  APP_CFG_TASK_OBJ1_PRIO                   4u
-
+#define  APP_CFG_TASK_OBJ1_PRIO                 4u
+#define  APP_CFG_TASK_DISPLAY_PRIO              10u
 
 /*
 *********************************************************************************************************
@@ -82,7 +82,7 @@
 #define  TRACE_LEVEL_DBG                        2u
 #endif
 
-#define  APP_TRACE_LEVEL                        TRACE_LEVEL_OFF
+#define  APP_TRACE_LEVEL                        3u
 #define  APP_TRACE                              printf
 
 #define  APP_TRACE_INFO(x)               ((APP_TRACE_LEVEL >= TRACE_LEVEL_INFO)  ? (void)(APP_TRACE x) : (void)0)

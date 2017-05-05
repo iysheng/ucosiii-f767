@@ -48,8 +48,16 @@
 
 #include  "stm32f7xx_hal.h"
 
+#include "apollo.h"
+#include "rgb.h"
+#include "touch.h"
 
-
+extern UART_HandleTypeDef IUART;
+extern TIM_HandleTypeDef ITIM2,ITIM3,ITIM5;
+extern TIM_OC_InitTypeDef IConfig;
+extern ADC_HandleTypeDef IADC,ICEKONG;
+extern DMA_HandleTypeDef IDMA_ADC;
+extern _touch_dev tp_dev;
 /*
 *********************************************************************************************************
 *                                            LOCAL DEFINES
@@ -111,5 +119,15 @@
 void  BSP_Init (void)
 {
     BSP_OSTickInit();                                           /* Initialize OS periodic time source                   */
-    BSP_LED_Init();                                             /* Init LEDs.                                           */
+    BSP_LED_Init();                                             /* Init LEDs.                           */                 
+    UART_init(&IUART);
+    SDRAM_init();  
+    LCD_Init();
+    TIM5_init();
+    CEKONG_init();
+    TIM2_init();
+    TIM3_init();
+    tp_dev.init();
+    HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);//初始化触摸屏按键中断
+    HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0x0, 1);
 }

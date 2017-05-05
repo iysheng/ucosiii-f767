@@ -54,6 +54,32 @@
 #include  <bsp_led.h>
 #include  <bsp_clock.h>
 
+#include "apollo.h"
+#include "rgb.h"
+#include "xiong.h"
+#include "touch.h"
+
+/*
+*
+*added from gpio pro
+*/
+extern UART_HandleTypeDef IUART;
+extern TIM_HandleTypeDef ITIM3;
+extern TIM_HandleTypeDef ITIM5;
+extern TIM_OC_InitTypeDef IConfig;
+extern ADC_HandleTypeDef ICEKONG;
+extern DMA_HandleTypeDef IDMA_ADC;
+extern uint32_t POINT_COLOR;		//画笔颜色
+extern uint32_t BACK_COLOR;             //背景颜色
+extern char rstr[RSTR_SIZE];
+extern uint16_t dma_adc_flag;
+extern uint64_t hole_ic_value;//捕获的计数值
+extern uint32_t ic_value;
+extern uint8_t ic_state;//捕获的状态值
+
+extern _touch_dev tp_dev;
+
+uint16_t raw_icekong[IDAC_COUNT];
 
 /*
 *********************************************************************************************************
@@ -80,7 +106,10 @@ static  OS_TCB       AppTaskObj0TCB;
 static  CPU_STK      AppTaskObj0Stk[APP_CFG_TASK_OBJ_STK_SIZE];
 
 static  OS_TCB       AppTaskObj1TCB;
-static  CPU_STK      AppTaskObj1Stk[APP_CFG_TASK_OBJ_STK_SIZE];                                                             
+static  CPU_STK      AppTaskObj1Stk[APP_CFG_TASK_OBJ_STK_SIZE];   
+
+static  OS_TCB       AppTaskDisplayTCB;
+static  CPU_STK      AppTaskDisplayStk[APP_CFG_TASK_OBJ_STK_SIZE];   /*RGB display task*/
 
 #if (OS_CFG_SEM_EN > 0u)
 //static  OS_SEM       AppTaskObjSem;
@@ -109,6 +138,7 @@ static  void  AppTaskCreate(void);
 
 static  void  AppTaskObj0  (void  *p_arg);
 static  void  AppTaskObj1  (void  *p_arg);
+static  void  AppTaskDisplay  (void  *p_arg);
 
 
 /*
@@ -204,10 +234,10 @@ static  void  AppTaskStart (void *p_arg)
     CPU_IntDisMeasMaxCurReset();
 #endif
 
-   // APP_TRACE_DBG(("Creating Application kernel objects\n\r"));
-   // AppObjCreate();                                             /* Create Applicaiton kernel objects                    */
+   //APP_TRACE_DBG(("Creating Application kernel objects\n\r"));
+   //AppObjCreate();                                             /* Create Applicaiton kernel objects                    */
 
-   // APP_TRACE_DBG(("Creating Application Tasks\n\r"));
+   APP_TRACE_DBG(("Creating Application Tasks\n\r"));
    AppTaskCreate();                                            /* Create Application tasks                             */
    OSTaskDel((OS_TCB *)0, &err);//删除自己
 }
@@ -231,6 +261,9 @@ static  void  AppTaskStart (void *p_arg)
 static  void  AppTaskCreate (void)
 {
     OS_ERR  os_err;
+    
+    HAL_ADC_Start_DMA(&ICEKONG,(uint32_t *)raw_icekong,IDAC_COUNT);
+    
                                                                 /* ---------- CREATE KERNEL OBJECTS TEST TASK --------- */
     OSTaskCreate(&AppTaskObj0TCB,
                  "Kernel Objects Task 0",
@@ -252,6 +285,19 @@ static  void  AppTaskCreate (void)
                   APP_CFG_TASK_OBJ1_PRIO,
                  &AppTaskObj1Stk[0],
                   AppTaskObj0Stk[APP_CFG_TASK_OBJ_STK_SIZE / 10u],
+                  APP_CFG_TASK_OBJ_STK_SIZE,
+                  0u,
+                  0u,
+                  0,
+                 (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+                 &os_err);
+    OSTaskCreate(&AppTaskDisplayTCB,
+                 "RGB Display Task",
+                  AppTaskDisplay,
+                  0,
+                  APP_CFG_TASK_DISPLAY_PRIO,
+                 &AppTaskDisplayStk[0],
+                  AppTaskDisplayStk[APP_CFG_TASK_OBJ_STK_SIZE / 10u],
                   APP_CFG_TASK_OBJ_STK_SIZE,
                   0u,
                   0u,
@@ -281,7 +327,8 @@ static  void  AppTaskObj0(void  *p_arg)
   OS_ERR  os_err;
   (void)p_arg;
   while (DEF_TRUE) {
-           BSP_LED_Off(2u);
+           BSP_LED_Off(0u);
+           APP_TRACE_DBG(("%s\r\n",AppTaskObj0TCB.NamePtr));
         OSTimeDlyHMSM(0u, 0u, 1u, 0u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &os_err);
@@ -293,7 +340,8 @@ static  void  AppTaskObj1(void  *p_arg)
   OS_ERR  os_err;
   (void)p_arg;
   while (DEF_TRUE) {
-           BSP_LED_On(2u);
+           BSP_LED_On(0u);
+           APP_TRACE_DBG(("%s\r\n",AppTaskObj1TCB.NamePtr));
                OSTimeDlyHMSM(0u, 0u, 2u, 0u,
                       OS_OPT_TIME_HMSM_STRICT,
                       &os_err);
@@ -301,3 +349,65 @@ static  void  AppTaskObj1(void  *p_arg)
   }
 }
 
+static  void  AppTaskDisplay(void  *p_arg)
+{ 
+  OS_ERR  os_err;
+  static uint8_t uline,upoint;
+  static float ftemp;
+  static uint32_t uitemp;
+  
+  (void)p_arg;
+  BACK_COLOR=WHITE;
+  LTDC_Clear(WHITE);
+  POINT_COLOR=RED;
+  APPOLO_RGB(0,0,gImage_xiong);
+  while (DEF_TRUE) {
+    if(dma_adc_flag<<7){
+    dma_adc_flag=0X00;
+    while(uline<4){
+    switch(uline)
+    {
+    case 0:{sprintf((char *)rstr,"PA4:%4dKg",raw_icekong[1]);break;}
+    case 1:{sprintf((char *)rstr,"PA5:%4dN.m",raw_icekong[2]);break;}
+    case 2:{sprintf((char *)rstr,"PA6:%4dcm",raw_icekong[3]);break;}
+    case 3:{uitemp=raw_icekong[0];ftemp=((float)uitemp)/4095*3300;ftemp=((ftemp-760.0)/2.5)+25;
+            sprintf((char *)rstr,"%0.3f",ftemp);break;}
+    default:break;
+    }
+    LCD_ShowString(120,130+uline*80,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+    printf("%s\r\n",rstr);
+    uline++;
+    }
+    uline=0;
+    }
+    if((ic_state&0x80)==0x80)
+    {
+      ic_state&=0x3f;
+      hole_ic_value=ic_state*(0xffffffff);
+      hole_ic_value+=ic_value;
+      ic_value=hole_ic_value/1000;
+      sprintf((char *)rstr,"PWM:%6dms...%9lldus",ic_value,hole_ic_value);
+      LCD_ShowString(120,50,strlen(rstr)*16,32,32,(uint8_t *)rstr);
+      printf("%s\r\n",rstr);
+      ic_state=0x00;
+    }
+    if(tp_dev.sta!=0)
+    {
+      tp_dev.sta&=0x1f;
+      while(tp_dev.sta&0x01){
+        upoint++;
+        tp_dev.sta>>=1;
+      }
+      for(tp_dev.sta=0;tp_dev.sta<upoint;tp_dev.sta++)
+      {
+      sprintf((char *)rstr,"%dtouchpoint,x=%3d,y=%3d",tp_dev.sta,(uint16_t)tp_dev.x[tp_dev.sta],(uint16_t)tp_dev.y[tp_dev.sta]);
+      printf("%s\r\n",rstr);}
+      LCD_ShowString(300,50+3*80,32*16,32,32,(uint8_t *)rstr);
+      upoint=0;
+      tp_dev.sta=0;
+    }   
+    OSTimeDlyHMSM(0u, 0u, 1u, 0u,
+                      OS_OPT_TIME_HMSM_STRICT,
+                      &os_err);    
+  }
+}
