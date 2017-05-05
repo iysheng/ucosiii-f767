@@ -22,6 +22,8 @@ D:\Apollo\ucosiii\UCOS-CONFIG
 -I
 D:\Apollo\ucosiii\uC-CPU\ARM-Cortex-M4\IAR
 -I
+D:\Apollo\ucosiii\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR
+-I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc
 -I
 D:\Program Files (x86)\IAR Systems\Embedded Workbench 8.0\arm\inc\c
@@ -45,6 +47,8 @@ D:\Apollo\ucosiii\UCOS-BSP
 D:\Apollo\ucosiii\UCOS-CONFIG
 -I
 D:\Apollo\ucosiii\uC-CPU\ARM-Cortex-M4\IAR
+-I
+D:\Apollo\ucosiii\uCOS-III\Ports\ARM-Cortex-M\ARMv7-M\IAR
 -D__CHAR_BITS__=8
 -D__CHAR_MAX__=0xff
 -D__CHAR_MIN__=0

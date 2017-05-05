@@ -93,7 +93,7 @@
 #define OS_CFG_STAT_TASK_STK_CHK_EN     DEF_ENABLED        /*     Check task stacks (DEF_ENABLED) from the statistic task           */
 
 #define OS_CFG_TASK_CHANGE_PRIO_EN      DEF_ENABLED        /* Include (DEF_ENABLED) code for OSTaskChangePrio()                     */
-#define OS_CFG_TASK_DEL_EN              DEF_DISABLED       /* Include (DEF_ENABLED) code for OSTaskDel()                            */
+#define OS_CFG_TASK_DEL_EN              DEF_ENABLED       /* Include (DEF_ENABLED) code for OSTaskDel()                            */
 #define OS_CFG_TASK_IDLE_EN             DEF_ENABLED        /* Include (DEF_ENABLED) the idle task                                   */
 #define OS_CFG_TASK_PROFILE_EN          DEF_ENABLED        /* Include (DEF_ENABLED) variables in OS_TCB for profiling               */
 #define OS_CFG_TASK_Q_EN                DEF_ENABLED        /* Include (DEF_ENABLED) code for OSTaskQXXXX()                          */

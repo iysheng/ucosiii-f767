@@ -226,7 +226,7 @@ void  OSTimeDlyHMSM (CPU_INT16U   hours,
 #endif
     OS_OPT       opt_time;
     OS_RATE_HZ   tick_rate;
-    OS_TICK      ticks;
+    static OS_TICK      ticks;
 #if (OS_CFG_TASK_TICK_EN == DEF_ENABLED)
     CPU_SR_ALLOC();
 #endif
